@@ -15,7 +15,7 @@ export async function POST(request: Request) {
     const repoData = await getAllRepoData(repos);
 
     // Convert Map to Object for JSON serialization
-    const repoDataObj: Record<string, any> = {};
+    const repoDataObj: Record<string, { stars: number; forks: number; language: string; description: string }> = {};
     repoData.forEach((value, key) => {
       repoDataObj[key] = value;
     });

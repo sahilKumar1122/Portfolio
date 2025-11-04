@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send email with optimized HTML
-    const emailData = await resend.emails.send({
+    await resend.emails.send({
       from: "Portfolio Contact <onboarding@resend.dev>",
       to: ["ksahilbazard@gmail.com"],
       replyTo: email,

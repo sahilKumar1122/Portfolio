@@ -27,7 +27,7 @@ export async function getRepoData(
       language: data.language || "Unknown",
       description: data.description || "",
     };
-  } catch (error) {
+  } catch {
     // Silently fail - GitHub stats are optional
     return null;
   }

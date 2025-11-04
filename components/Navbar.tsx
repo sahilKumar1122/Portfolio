@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Code2 } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import Image from "next/image";
 
 // Split navigation links - mascot will be in the center
 const leftNavLinks = [
@@ -96,11 +97,13 @@ export default function Navbar() {
               href="#"
               className="flex items-center justify-center w-12 h-12 rounded-full hover:scale-110 transition-transform overflow-hidden border-2 border-primary/20"
             >
-              <img 
+              <Image 
                 src="/images/mascot.png" 
                 alt="Mascot" 
+                width={48}
+                height={48}
                 className="w-full h-full object-cover"
-                loading="eager"
+                priority
               />
             </a>
             <button
@@ -139,11 +142,13 @@ export default function Navbar() {
               href="#"
               className="flex items-center justify-center w-14 h-14 rounded-full hover:scale-110 transition-transform shadow-lg mx-2 overflow-hidden border-2 border-primary/20"
             >
-              <img 
+              <Image 
                 src="/images/mascot.png" 
                 alt="Mascot" 
+                width={56}
+                height={56}
                 className="w-full h-full object-cover"
-                loading="eager"
+                priority
               />
             </a>
 
