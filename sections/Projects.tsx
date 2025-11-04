@@ -7,24 +7,53 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Github, ExternalLink, Star, GitFork } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getAllRepoData, GitHubRepoData } from "@/lib/github";
+import { GitHubRepoData } from "@/lib/github";
 
 export default function Projects() {
   const [repoData, setRepoData] = useState<Map<string, GitHubRepoData>>(
     new Map()
   );
+  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const fetchRepoData = async () => {
-      const repos = projects
-        .filter((p) => p.repo)
-        .map((p) => p.repo as string);
-      const data = await getAllRepoData(repos);
-      setRepoData(data);
+      try {
+        const repos = projects
+          .filter((p) => p.repo)
+          .map((p) => p.repo as string);
+        
+        if (repos.length === 0) return;
+        
+        const response = await fetch("/api/github", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ repos }),
+        });
+
+        if (response.ok) {
+          const { data } = await response.json();
+          const dataMap = new Map<string, GitHubRepoData>(
+            Object.entries(data)
+          );
+          setRepoData(dataMap);
+        }
+      } catch (error) {
+        console.log("GitHub stats unavailable:", error);
+      }
     };
 
     fetchRepoData();
   }, []);
+
+  const handleImageError = (projectTitle: string) => {
+    console.log(`Image failed to load for: ${projectTitle}`);
+    setImageErrors(prev => new Set(prev).add(projectTitle));
+  };
+
+  const featuredProjects = projects.filter(p => p.featured);
+  const otherProjects = projects.filter(p => !p.featured);
 
   return (
     <SectionWrapper id="projects">
@@ -42,75 +71,68 @@ export default function Projects() {
           <div className="w-20 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
         </motion.div>
 
-        {/* Featured Project */}
-        {projects
-          .filter((p) => p.featured)
-          .map((project, index) => {
-            const data = project.repo ? repoData.get(project.repo) : null;
-            return (
+        {/* Featured Projects */}
+        {featuredProjects.map((project, index) => {
+          const data = project.repo ? repoData.get(project.repo) : null;
+          const hasImageError = imageErrors.has(project.title);
+          const showImage = project.image && !hasImageError;
+          
+          return (
+            <motion.div
+              key={project.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{
+                duration: 0.5,
+                delay: index * 0.1,
+                ease: [0.21, 0.47, 0.32, 0.98],
+              }}
+              className="mb-12 group"
+            >
               <motion.div
-                key={project.title}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="mb-16"
+                className="bg-white rounded-xl shadow-lg overflow-hidden border border-border hover:shadow-2xl transition-all duration-300"
+                whileHover={{
+                  y: -8,
+                  transition: { duration: 0.3, ease: "easeOut" }
+                }}
               >
-                <div className="bg-white rounded-xl border border-border shadow-sm overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 ease-out">
-                  <div className="grid md:grid-cols-2 gap-0">
-                    {/* Featured Project Image */}
-                    <div
-                      className={`bg-gradient-to-br ${project.gradient} h-64 md:h-auto flex items-center justify-center relative overflow-hidden`}
-                    >
-                      {/* Animated mesh background */}
-                      <div className="absolute inset-0 opacity-20">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.8),transparent_50%)]" />
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(255,255,255,0.6),transparent_50%)]" />
-                      </div>
-                      
-                      {/* Large project initial */}
-                      <motion.div
-                        className="text-white text-8xl md:text-9xl font-bold drop-shadow-2xl z-10"
-                        animate={{ 
-                          scale: [1, 1.05, 1],
-                          rotate: [0, 2, 0]
-                        }}
-                        transition={{
-                          repeat: Infinity,
-                          duration: 4,
-                          ease: "easeInOut",
-                        }}
-                      >
+                <div className="grid md:grid-cols-2 gap-0">
+                  {/* Featured Project Image/Gradient */}
+                  <div
+                    className={`bg-gradient-to-br ${project.gradient} h-64 md:h-auto flex items-center justify-center relative overflow-hidden`}
+                  >
+                    {showImage ? (
+                      <img 
+                        src={project.image} 
+                        alt={project.title}
+                        className="w-full h-full object-cover"
+                        onError={() => handleImageError(project.title)}
+                      />
+                    ) : (
+                      <div className="text-white text-8xl md:text-9xl font-bold drop-shadow-2xl z-10">
                         {project.title.charAt(0)}
-                      </motion.div>
-                      
-                      {/* Decorative floating elements */}
-                      <motion.div 
-                        className="absolute top-10 right-10 w-32 h-32 bg-white/20 rounded-full blur-3xl"
-                        animate={{ y: [0, -20, 0], x: [0, 10, 0] }}
-                        transition={{ repeat: Infinity, duration: 5 }}
-                      />
-                      <motion.div 
-                        className="absolute bottom-10 left-10 w-24 h-24 bg-white/20 rounded-full blur-2xl"
-                        animate={{ y: [0, 20, 0], x: [0, -10, 0] }}
-                        transition={{ repeat: Infinity, duration: 4 }}
-                      />
-                      
-                      <Badge className="absolute top-4 right-4 bg-white text-foreground shadow-lg">
-                        Featured
-                      </Badge>
-                    </div>
+                      </div>
+                    )}
+                    
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                    
+                    <Badge className="absolute top-4 right-4 bg-white text-foreground shadow-lg z-20">
+                      Featured
+                    </Badge>
+                  </div>
 
-                    {/* Content */}
-                    <div className="p-8">
-                      <h3 className="text-2xl font-bold text-foreground mb-3">
+                  {/* Project Details */}
+                  <div className="p-8 flex flex-col justify-between bg-gradient-to-br from-background to-muted/20">
+                    <div>
+                      <h3 className="text-2xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
                         {project.title}
                       </h3>
-                      <p className="text-secondary mb-4 leading-relaxed">
+                      <p className="text-secondary mb-6 leading-relaxed">
                         {project.longDescription || project.description}
                       </p>
 
-                      <div className="flex flex-wrap gap-2 mb-4">
+                      <div className="flex flex-wrap gap-2 mb-6">
                         {project.techStack.map((tech) => (
                           <Badge
                             key={tech}
@@ -120,96 +142,90 @@ export default function Projects() {
                           </Badge>
                         ))}
                       </div>
+                    </div>
 
-                      {data && (
-                        <div className="flex items-center gap-4 mb-4 text-sm text-secondary">
-                          <div className="flex items-center gap-1">
-                            <Star size={14} className="text-yellow-500" />
-                            <span>{data.stars}</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <GitFork size={14} />
-                            <span>{data.forks}</span>
-                          </div>
-                          <Badge variant="outline" className="text-xs">
-                            {data.language}
-                          </Badge>
+                    {data && (
+                      <div className="flex items-center gap-4 mb-4 text-sm text-secondary">
+                        <div className="flex items-center gap-1">
+                          <Star size={16} className="text-yellow-500" />
+                          <span>{data.stars}</span>
                         </div>
-                      )}
-
-                      <div className="flex gap-3">
-                        {project.githubUrl && (
-                          <Button variant="default" size="sm" asChild>
-                            <a
-                              href={project.githubUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <Github size={16} className="mr-2" />
-                              GitHub
-                            </a>
-                          </Button>
-                        )}
-                        {project.liveUrl && (
-                          <Button variant="outline" size="sm" asChild>
-                            <a
-                              href={project.liveUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              <ExternalLink size={16} className="mr-2" />
-                              Live Demo
-                            </a>
-                          </Button>
-                        )}
+                        <div className="flex items-center gap-1">
+                          <GitFork size={16} />
+                          <span>{data.forks}</span>
+                        </div>
+                        <Badge variant="outline" className="text-xs">
+                          {data.language}
+                        </Badge>
                       </div>
+                    )}
+
+                    <div className="flex gap-3">
+                      {project.githubUrl && (
+                        <Button variant="default" size="sm" asChild>
+                          <a
+                            href={project.githubUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Github size={16} className="mr-2" />
+                            GitHub
+                          </a>
+                        </Button>
+                      )}
+                      {project.liveUrl && (
+                        <Button variant="outline" size="sm" asChild>
+                          <a
+                            href={project.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <ExternalLink size={16} className="mr-2" />
+                            Live Demo
+                          </a>
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>
               </motion.div>
-            );
-          })}
+            </motion.div>
+          );
+        })}
 
         {/* Other Projects Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {projects
-            .filter((p) => !p.featured)
-            .map((project, index) => {
-              const data = project.repo ? repoData.get(project.repo) : null;
-              return (
-                <motion.div
-                  key={project.title}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ scale: 1.03, y: -8 }}
-                  className="bg-white rounded-lg border border-border shadow-sm overflow-hidden hover:shadow-xl hover:border-primary/20 transition-all duration-300"
-                >
-                  {/* Gradient Header with Icon */}
-                  <div
-                    className={`bg-gradient-to-br ${project.gradient} h-40 flex items-center justify-center relative overflow-hidden`}
-                  >
-                    {/* Animated background pattern */}
-                    <div className="absolute inset-0 opacity-10">
-                      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(255,255,255,0.8),transparent_50%)]" />
+          {otherProjects.map((project, index) => {
+            const data = project.repo ? repoData.get(project.repo) : null;
+            
+            return (
+              <motion.div
+                key={project.title}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{
+                  duration: 0.4,
+                  delay: index * 0.1,
+                  ease: [0.21, 0.47, 0.32, 0.98],
+                }}
+                whileHover={{
+                  y: -8,
+                  transition: { duration: 0.3, ease: "easeOut" }
+                }}
+                className="group"
+              >
+                <div className="bg-white rounded-xl shadow-md overflow-hidden border border-border hover:shadow-xl transition-all duration-300 h-full flex flex-col">
+                  <div className={`bg-gradient-to-br ${project.gradient} h-32 relative overflow-hidden flex items-center justify-center`}>
+                    <div className="text-white text-6xl font-bold z-10 drop-shadow-lg">
+                      {project.title.charAt(0)}
                     </div>
                     
-                    {/* Project initial */}
-                    <motion.div
-                      className="text-white text-6xl font-bold drop-shadow-lg z-10"
-                      whileHover={{ scale: 1.15, rotate: 5 }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      {project.title.charAt(0)}
-                    </motion.div>
-                    
-                    {/* Decorative elements */}
                     <div className="absolute top-2 right-2 w-20 h-20 bg-white/20 rounded-full blur-2xl" />
                     <div className="absolute bottom-2 left-2 w-16 h-16 bg-white/20 rounded-full blur-xl" />
                   </div>
 
-                  <div className="p-5">
+                  <div className="p-5 flex flex-col flex-1">
                     <h3 className="text-lg font-bold text-foreground mb-2">
                       {project.title}
                     </h3>
@@ -243,42 +259,43 @@ export default function Projects() {
                           <GitFork size={12} />
                           <span>{data.forks}</span>
                         </div>
+                        <Badge variant="outline" className="text-xs">
+                          {data.language}
+                        </Badge>
                       </div>
                     )}
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mt-auto">
                       {project.githubUrl && (
-                        <Button variant="outline" size="sm" asChild>
+                        <Button variant="outline" size="sm" className="flex-1" asChild>
                           <a
                             href={project.githubUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <Github size={14} className="mr-1" />
-                            Code
+                            <Github size={14} />
                           </a>
                         </Button>
                       )}
                       {project.liveUrl && (
-                        <Button variant="outline" size="sm" asChild>
+                        <Button variant="default" size="sm" className="flex-1" asChild>
                           <a
                             href={project.liveUrl}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            <ExternalLink size={14} className="mr-1" />
-                            Demo
+                            <ExternalLink size={14} />
                           </a>
                         </Button>
                       )}
                     </div>
                   </div>
-                </motion.div>
-              );
-            })}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </SectionWrapper>
   );
 }
-

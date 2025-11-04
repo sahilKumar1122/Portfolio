@@ -8,6 +8,7 @@ export interface Project {
   featured?: boolean;
   gradient: string;
   repo?: string;
+  image?: string;
 }
 
 export const projects: Project[] = [
@@ -31,6 +32,7 @@ export const projects: Project[] = [
     featured: true,
     gradient: "from-orange-400 to-red-500",
     repo: "sahilKumar1122/NaanStop",
+    // image: "/images/naanstop.jpg",
   },
   {
     title: "Frontend Prep Lab",
@@ -38,8 +40,10 @@ export const projects: Project[] = [
       "Comprehensive frontend interview preparation platform with coding challenges and solutions",
     techStack: ["React", "TypeScript", "TailwindCSS", "Vite"],
     githubUrl: "https://github.com/sahilKumar1122/Frontend-Prep-Lab",
+    // featured: true,
     gradient: "from-blue-400 to-cyan-500",
     repo: "sahilKumar1122/Frontend-Prep-Lab",
+    // image: "/images/frontend-preplab.png",
   },
   {
     title: "PR-Pilot",
@@ -67,8 +71,10 @@ export const projects: Project[] = [
     ],
     githubUrl:
       "https://github.com/sahilKumar1122/nameless-anonymous-social-platform",
+    featured: true,
     gradient: "from-green-400 to-teal-500",
     repo: "sahilKumar1122/nameless-anonymous-social-platform",
+    // image: "/images/nameless.png",
   },
   {
     title: "Codeforces Companion",

@@ -49,9 +49,27 @@ export default function About() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="flex justify-center"
           >
-            <div className="relative">
+            <div className="relative group">
+              {/* Animated ring */}
+              <motion.div 
+                className="absolute inset-0 rounded-full border-4 border-primary/30"
+                animate={{ 
+                  scale: [1, 1.1, 1],
+                  rotate: [0, 180, 360]
+                }}
+                transition={{ 
+                  duration: 8,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+              />
+              
               {/* Profile Image Container */}
-              <div className="w-72 h-72 rounded-full overflow-hidden border-4 border-white shadow-xl relative">
+              <motion.div 
+                className="w-72 h-72 rounded-full overflow-hidden border-4 border-white shadow-xl relative"
+                whileHover={{ scale: 1.05, rotate: 5 }}
+                transition={{ duration: 0.3 }}
+              >
                 {/* If you add your photo as public/images/profile.jpg, it will show here */}
                 <div className="w-full h-full bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center">
                   {/* Your profile photo */}
@@ -72,7 +90,7 @@ export default function About() {
                     }}
                   />
                 </div>
-              </div>
+              </motion.div>
               
               {/* Decorative elements */}
               <div className="absolute -bottom-4 -right-4 bg-white rounded-full p-4 shadow-lg border-2 border-primary/20">

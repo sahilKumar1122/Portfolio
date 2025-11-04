@@ -3,7 +3,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useRef } from "react";
+import MagneticButton from "@/components/MagneticButton";
+import { useRef, useState, useEffect } from "react";
 
 export default function Hero() {
   const scrollToProjects = () => {
@@ -13,6 +14,38 @@ export default function Hero() {
   const scrollToContact = () => {
     document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
   };
+
+  // Typing animation
+  const roles = ["Software Engineer", "Frontend Developer", "Problem Solver", "Tech Enthusiast"];
+  const [currentRole, setCurrentRole] = useState("");
+  const [roleIndex, setRoleIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const typeSpeed = isDeleting ? 50 : 100;
+    const pauseTime = isDeleting ? 500 : 2000;
+
+    const timeout = setTimeout(() => {
+      const fullRole = roles[roleIndex];
+
+      if (!isDeleting) {
+        if (currentRole.length < fullRole.length) {
+          setCurrentRole(fullRole.substring(0, currentRole.length + 1));
+        } else {
+          setTimeout(() => setIsDeleting(true), pauseTime);
+        }
+      } else {
+        if (currentRole.length > 0) {
+          setCurrentRole(fullRole.substring(0, currentRole.length - 1));
+        } else {
+          setIsDeleting(false);
+          setRoleIndex((roleIndex + 1) % roles.length);
+        }
+      }
+    }, typeSpeed);
+
+    return () => clearTimeout(timeout);
+  }, [currentRole, isDeleting, roleIndex, roles]);
 
   // Parallax effect
   const ref = useRef(null);
@@ -68,14 +101,21 @@ export default function Hero() {
             Sahil Kumar
           </motion.h1>
 
-          <motion.p
-            className="text-2xl sm:text-3xl md:text-4xl text-secondary mb-6 font-light tracking-wide"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            Software Engineer
-          </motion.p>
+                  <motion.p
+                    className="text-2xl sm:text-3xl md:text-4xl text-secondary mb-6 font-light tracking-wide h-12 sm:h-14 md:h-16 flex items-center justify-center"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                  >
+                    <span>{currentRole}</span>
+                    <motion.span
+                      animate={{ opacity: [1, 0, 1] }}
+                      transition={{ duration: 0.8, repeat: Infinity }}
+                      className="ml-1 text-primary font-normal"
+                    >
+                      |
+                    </motion.span>
+                  </motion.p>
 
           <motion.p
             className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-16 max-w-3xl mx-auto font-light leading-relaxed"
@@ -87,43 +127,44 @@ export default function Hero() {
             Building intelligent systems for the modern web.
           </motion.p>
 
-          <motion.div
-            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-          >
-            <Button
-              size="lg"
-              onClick={scrollToProjects}
-              className="text-lg px-12 py-7 rounded-full shadow-lg hover:shadow-2xl transition-all hover:scale-105"
-            >
-              View My Work
-            </Button>
-            <Button
-              size="lg"
-              variant="ghost"
-              onClick={scrollToContact}
-              className="text-lg px-10 py-7 rounded-full hover:bg-foreground/5 transition-all"
-            >
-              Get In Touch
-            </Button>
-          </motion.div>
+                  <motion.div
+                    className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.8 }}
+                  >
+                    <MagneticButton
+                      onClick={scrollToProjects}
+                      className="text-lg px-12 py-7 rounded-full shadow-lg hover:shadow-2xl transition-all bg-primary text-white font-medium"
+                    >
+                      View My Work
+                    </MagneticButton>
+                    <MagneticButton
+                      onClick={scrollToContact}
+                      className="text-lg px-10 py-7 rounded-full hover:bg-foreground/5 transition-all border-2 border-foreground/10 font-medium"
+                    >
+                      Get In Touch
+                    </MagneticButton>
+                  </motion.div>
         </motion.div>
+      </motion.div>
 
-        {/* Scroll Indicator */}
+      {/* Scroll Indicator - Outside parallax content */}
+      <motion.div
+        className="absolute bottom-16 left-1/2 -translate-x-1/2 z-30"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1, delay: 1.5 }}
+      >
         <motion.div
-          className="absolute bottom-12 left-1/2 transform -translate-x-1/2 z-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.5 }}
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+          className="flex flex-col items-center cursor-pointer"
+          onClick={() => {
+            document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+          }}
         >
-          <motion.div
-            animate={{ y: [0, 10, 0] }}
-            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-          >
-            <ArrowDown className="text-secondary" size={24} />
-          </motion.div>
+          <ArrowDown className="text-secondary hover:text-primary transition-colors" size={32} />
         </motion.div>
       </motion.div>
     </section>

@@ -28,7 +28,7 @@ export async function getRepoData(
       description: data.description || "",
     };
   } catch (error) {
-    console.error(`Error fetching repo data for ${repo}:`, error);
+    // Silently fail - GitHub stats are optional
     return null;
   }
 }

@@ -181,7 +181,7 @@ export default function Contact() {
                 <Textarea
                   id="message"
                   rows={5}
-                  placeholder="Tell me about your project or say hello..."
+                  placeholder="What's on your mind? Let's talk..."
                   {...register("message")}
                   className={errors.message ? "border-red-500" : ""}
                 />

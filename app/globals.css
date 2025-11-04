@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
 @layer base {
   :root {
     --background: 250 250 252; /* Slightly warmer, more refined white */
@@ -23,6 +28,7 @@
     --ring: 79 70 229;
     --radius: 0.5rem;
   }
+
 }
 
 @layer base {
@@ -40,10 +46,6 @@
   .text-balance {
     text-wrap: balance;
   }
-}
-
-html {
-  scroll-behavior: smooth;
 }
 
 /* Gradient mesh background - More subtle and sophisticated */
