@@ -13,7 +13,6 @@ export default function Projects() {
   const [repoData, setRepoData] = useState<Map<string, GitHubRepoData>>(
     new Map()
   );
-  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     const fetchRepoData = async () => {
@@ -47,11 +46,6 @@ export default function Projects() {
     fetchRepoData();
   }, []);
 
-  const handleImageError = (projectTitle: string) => {
-    console.log(`Image failed to load for: ${projectTitle}`);
-    setImageErrors(prev => new Set(prev).add(projectTitle));
-  };
-
   const featuredProjects = projects.filter(p => p.featured);
   const otherProjects = projects.filter(p => !p.featured);
 
@@ -65,7 +59,7 @@ export default function Projects() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4">
             Featured Projects
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full" />
@@ -74,48 +68,34 @@ export default function Projects() {
         {/* Featured Projects */}
         {featuredProjects.map((project, index) => {
           const data = project.repo ? repoData.get(project.repo) : null;
-          const hasImageError = imageErrors.has(project.title);
-          const showImage = project.image && !hasImageError;
           
           return (
             <motion.div
               key={project.title}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.1, margin: "-50px" }}
               transition={{
                 duration: 0.5,
                 delay: index * 0.1,
                 ease: [0.21, 0.47, 0.32, 0.98],
               }}
-              className="mb-12 group"
+              className="mb-8 md:mb-12 group"
             >
-              <motion.div
+              <motion.div 
                 className="bg-white rounded-xl shadow-lg overflow-hidden border border-border hover:shadow-2xl transition-all duration-300"
-                whileHover={{
-                  y: -8,
-                  transition: { duration: 0.3, ease: "easeOut" }
-                }}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
               >
                 <div className="grid md:grid-cols-2 gap-0">
                   {/* Featured Project Image/Gradient */}
                   <div
-                    className={`bg-gradient-to-br ${project.gradient} h-64 md:h-auto flex items-center justify-center relative overflow-hidden`}
+                    className={`bg-gradient-to-br ${project.gradient} h-64 md:h-full min-h-[300px] flex items-center justify-center relative overflow-hidden`}
                   >
-                    {showImage ? (
-                      <img 
-                        src={project.image} 
-                        alt={project.title}
-                        className="w-full h-full object-cover"
-                        onError={() => handleImageError(project.title)}
-                      />
-                    ) : (
-                      <div className="text-white text-8xl md:text-9xl font-bold drop-shadow-2xl z-10">
-                        {project.title.charAt(0)}
-                      </div>
-                    )}
+                    <div className="text-white text-7xl md:text-8xl lg:text-9xl font-bold drop-shadow-2xl z-10">
+                      {project.title.charAt(0)}
+                    </div>
                     
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
                     
                     <Badge className="absolute top-4 right-4 bg-white text-foreground shadow-lg z-20">
                       Featured
@@ -194,24 +174,20 @@ export default function Projects() {
         })}
 
         {/* Other Projects Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {otherProjects.map((project, index) => {
             const data = project.repo ? repoData.get(project.repo) : null;
             
             return (
               <motion.div
                 key={project.title}
-                initial={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
+                viewport={{ once: true, amount: 0.1, margin: "-50px" }}
                 transition={{
                   duration: 0.4,
-                  delay: index * 0.1,
+                  delay: index * 0.08,
                   ease: [0.21, 0.47, 0.32, 0.98],
-                }}
-                whileHover={{
-                  y: -8,
-                  transition: { duration: 0.3, ease: "easeOut" }
                 }}
                 className="group"
               >

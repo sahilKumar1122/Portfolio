@@ -17,10 +17,10 @@ export default function SectionWrapper({
   return (
     <motion.section
       id={id}
-      className={`py-20 px-6 md:px-12 lg:px-24 ${className}`}
+      className={`py-16 md:py-24 lg:py-32 px-6 md:px-12 lg:px-24 ${className}`}
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-150px", amount: 0.2 }}
+      viewport={{ once: true, margin: "-100px", amount: 0.1 }}
       transition={{ 
         duration: 0.8, 
         ease: [0.22, 1, 0.36, 1], // Custom easing for smoother feel

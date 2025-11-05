@@ -64,7 +64,7 @@ export default function Hero() {
   const contentOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [1, 0.8, 0]);
 
   return (
-    <section ref={ref} className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <section ref={ref} className="min-h-screen flex items-center justify-center relative overflow-hidden pt-24 md:pt-28 lg:pt-32">
       {/* Background Image with Parallax */}
       <motion.div 
         className="absolute inset-0 z-0"
@@ -84,7 +84,7 @@ export default function Hero() {
       </motion.div>
 
       <motion.div 
-        className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24 text-center relative z-10"
+        className="max-w-7xl mx-auto px-6 md:px-12 lg:px-24 text-center relative z-10 py-8"
         style={{ y: contentY, opacity: contentOpacity }}
       >
         <motion.div
@@ -93,7 +93,7 @@ export default function Hero() {
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
           <motion.h1
-            className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-foreground mb-8 tracking-tight leading-none"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-foreground mb-6 md:mb-8 tracking-tight leading-tight"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -102,7 +102,7 @@ export default function Hero() {
           </motion.h1>
 
                   <motion.p
-                    className="text-2xl sm:text-3xl md:text-4xl text-secondary mb-6 font-light tracking-wide h-12 sm:h-14 md:h-16 flex items-center justify-center"
+                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl text-secondary mb-4 md:mb-6 font-light tracking-wide min-h-[48px] sm:min-h-[56px] md:min-h-[64px] flex items-center justify-center"
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.4 }}
@@ -118,7 +118,7 @@ export default function Hero() {
                   </motion.p>
 
           <motion.p
-            className="text-lg sm:text-xl md:text-2xl text-muted-foreground mb-16 max-w-3xl mx-auto font-light leading-relaxed"
+            className="text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground mb-12 md:mb-16 max-w-3xl mx-auto font-light leading-relaxed"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
@@ -128,20 +128,20 @@ export default function Hero() {
           </motion.p>
 
                   <motion.div
-                    className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+                    className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center"
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: 0.8 }}
                   >
                     <MagneticButton
                       onClick={scrollToProjects}
-                      className="text-lg px-12 py-7 rounded-full shadow-lg hover:shadow-2xl transition-all bg-primary text-white font-medium"
+                      className="text-base md:text-lg px-8 md:px-12 py-4 md:py-6 rounded-full shadow-lg hover:shadow-2xl transition-all bg-primary text-white font-medium"
                     >
                       View My Work
                     </MagneticButton>
                     <MagneticButton
                       onClick={scrollToContact}
-                      className="text-lg px-10 py-7 rounded-full hover:bg-foreground/5 transition-all border-2 border-foreground/10 font-medium"
+                      className="text-base md:text-lg px-8 md:px-10 py-4 md:py-6 rounded-full hover:bg-foreground/5 transition-all border-2 border-foreground/10 font-medium"
                     >
                       Get In Touch
                     </MagneticButton>

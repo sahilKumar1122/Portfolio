@@ -5,6 +5,20 @@
 /* Smooth scroll behavior */
 html {
   scroll-behavior: smooth;
+  /* Ensure consistent sizing at all zoom levels */
+  font-size: 16px;
+}
+
+/* Prevent layout shifts at different zoom levels */
+* {
+  box-sizing: border-box;
+}
+
+/* Improve text rendering at all zoom levels */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 @layer base {

@@ -50,7 +50,7 @@ export default function Navbar() {
       {/* SK Logo - Fixed on Left */}
       <motion.a
         href="#"
-        className={`fixed top-6 left-6 z-50 text-2xl font-bold transition-all duration-300 ${
+        className={`fixed top-3 sm:top-4 md:top-5 left-3 sm:left-4 md:left-6 z-50 text-lg sm:text-xl md:text-2xl font-bold transition-all duration-300 ${
           isScrolled ? "text-primary" : "text-foreground"
         }`}
         initial={{ opacity: 0, x: -20 }}
@@ -62,32 +62,32 @@ export default function Navbar() {
 
       {/* Open to Work Badge - Fixed on Right */}
       <motion.div
-        className="fixed top-6 right-6 z-50"
+        className="fixed top-3 sm:top-4 md:top-5 right-3 sm:right-4 md:right-6 z-50"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 px-4 py-2 rounded-full shadow-md">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-          <span className="text-sm font-medium">Open to Work</span>
+        <div className="flex items-center gap-1.5 sm:gap-2 bg-green-50 border border-green-200 text-green-700 px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full shadow-md text-xs sm:text-sm">
+          <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-green-500 rounded-full animate-pulse" />
+          <span className="font-medium">Open to Work</span>
         </div>
       </motion.div>
 
       {/* Centered Navigation */}
       <motion.nav
-        className={`fixed left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? "top-4" : "top-6"
+        className={`fixed left-0 right-0 z-40 transition-all duration-300 ${
+          isScrolled ? "top-2 sm:top-3 md:top-4" : "top-3 sm:top-4 md:top-5"
         }`}
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
         <div 
-          className={`mx-auto w-fit ${
+          className={`mx-auto w-fit max-w-[90vw] ${
             isScrolled
               ? "bg-white shadow-xl"
               : "bg-white/80 shadow-lg"
-          } backdrop-blur-md rounded-full px-8 py-4 border border-border/50`}
+          } backdrop-blur-md rounded-full px-4 sm:px-6 md:px-8 py-3 sm:py-4 border border-border/50`}
         >
           <div className="flex items-center justify-center">
             {/* Mobile: Logo + Menu Button */}
@@ -113,13 +113,13 @@ export default function Navbar() {
           </div>
 
           {/* Desktop Navigation - Centered with Logo in Middle */}
-          <div className="hidden md:flex items-center gap-6 lg:gap-8">
+          <div className="hidden md:flex items-center gap-3 lg:gap-6 xl:gap-8">
             {/* Left Nav Links */}
             {leftNavLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors relative whitespace-nowrap ${
+                className={`text-xs lg:text-sm font-medium transition-colors relative whitespace-nowrap ${
                   activeSection === link.href.substring(1)
                     ? "text-primary"
                     : "text-secondary hover:text-foreground"
@@ -154,7 +154,7 @@ export default function Navbar() {
               <a
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors relative whitespace-nowrap ${
+                className={`text-xs lg:text-sm font-medium transition-colors relative whitespace-nowrap ${
                   activeSection === link.href.substring(1)
                     ? "text-primary"
                     : "text-secondary hover:text-foreground"

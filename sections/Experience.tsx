@@ -7,7 +7,7 @@ import { Building2, MapPin, Calendar } from "lucide-react";
 
 export default function Experience() {
   return (
-    <section id="experience" className="py-20 px-6 md:px-12 lg:px-24 bg-muted/30 relative overflow-hidden">
+    <section id="experience" className="py-16 md:py-24 lg:py-32 px-6 md:px-12 lg:px-24 bg-muted/30 relative overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
@@ -24,7 +24,7 @@ export default function Experience() {
           className="text-center mb-16"
         >
           <motion.h2 
-            className="text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground mb-4"
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
